@@ -3,6 +3,7 @@
 ## Recreating the passward generator from "keychain"
 
 Output is "word + digits(5) + special character + word" 
+
 ex. foo55555!bar
 
 Input for overall password length (minimum and maximum)
