@@ -17,12 +17,8 @@ A running tally for number of loops is displayed, along with the password itself
 
 In terminal run:
 ```
-python3 gen_json.py
-```
-```
 python3 gen_pass.py
 ```
-Note: 'gen_json.py' only needs to run once unless updates to "word_list.json" are made. 
 
 
 ## Future Modifications
