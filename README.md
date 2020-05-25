@@ -3,7 +3,7 @@
 ## Recreating the passward generator from "keychain"
 
 Output is "word + digits(5) + special character + word" 
-```
+  ```
   ex. foo55555!bar
   ```
 
@@ -28,4 +28,4 @@ python3 gen_pass.py
 3. Clean up "word_list.json," not all words (i.e. "a" and "aa") need to be in list
 4. "Acceptance" or "Rejection" for password
 5. Save to clipboard (goal will be time-limiting save) 
-
+6. Compliance with specified framework (i.e NIST)
