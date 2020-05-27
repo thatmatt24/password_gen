@@ -1,23 +1,22 @@
+import threading
 import random
 import json
-import sys
-import os
 import time
 import csv
+import sys
+import os
 
-NUM_RUNS = 1000
+NUM_THREADS = 10
+NUM_RUNS_PER_THREAD = 100
 
-def writer(two, three):
+def writer(password, length):
 
-    # print(one, two, three)
-
-    with open('random.csv', 'a', newline='') as f:
+    with open('test.csv', 'a', newline='') as f:
         fieldnames = ['password', 'length']
         thewriter = csv.DictWriter(f, fieldnames=fieldnames)
 
         # thewriter.writeheader()
-        thewriter.writerow({'password' : two, 'length' : three})
-
+        thewriter.writerow({'password' : password, 'length' : length})
 
 
 def generate():
@@ -46,34 +45,33 @@ def generate():
 
     return password
 
-
-# def checker(min=15,max=21):
-def checker():
-
-    passw = ''
-    runs = 0
-
-    while True:
-
-        passw = generate()
-        # print("{}, {}".format(passw, len(passw)))
-        writer(passw, len(passw))
-        runs += 1
-        if (runs == NUM_RUNS): break
-
-
 def main():
 
-    # checker(sys.argv[1], sys.argv[2])
-    start = time.perf_counter()
+    threads = []
 
-    checker()
-        # os.system("python3 gen_pass.py {} {}".format(sys.argv[1], sys.argv[2]))
+    start = time.perf_counter()
+    for num in range(NUM_THREADS):
+        t = threading.Thread(target=run, args=(num,))
+        t.start()
+        threads.append(t)
+
+    for thread in threads:
+        thread.join()
+    
     stop = time.perf_counter()
 
-    print("done in:", round(stop - start, 2))
-    print("threads: {}\nruns per: {}".format(0, NUM_RUNS))
-
+    print("done in:  {}".format(round(stop - start, 2)))
+    print("threads:  {}\nruns per: {}".format(NUM_THREADS, NUM_RUNS_PER_THREAD))
     
+def run(num):
+
+    # print(f'thread {num}')
+
+    for i in range(NUM_RUNS_PER_THREAD):
+        password = generate()
+        writer(password, len(password))
+
+    # print(f"ending thread {num}")
+
 if __name__ == "__main__":
     main()
