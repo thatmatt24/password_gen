@@ -13,14 +13,17 @@ In terminal run:
 ```
 python3 gen_pass.py {password length}
 ```
-Note: If no argument {password length} provided, default set to 15
-      Password saved to clipboard for 20 seconds
+<dl>
+  <dt>Note </dt>
+  <dd>If no argument {password length} provided, default set to 15</dd>
+  <dd>Password saved to clipboard for 20 seconds</dd>
+</dl>
 
 ## Future Modifications
 
-~~1. Argument parsing to replace the current "input"~~
+1. ~~Argument parsing to replace the current "input"~~
 2. Hashing: storing and checking against to make sure password isn't used more than once
-~~3. Clean up "word_list.json," not all words (i.e. "a" and "aa") need to be in list~~
+3. ~~Clean up "word_list.json," not all words (i.e. "a" and "aa") need to be in list~~
 4. "Acceptance" or "Rejection" for password
-~~5. Save to clipboard (goal will be time-limiting save) ~~
+5. ~~Save to clipboard (goal will be time-limiting save)~~
 6. Compliance with specified framework (i.e NIST)
