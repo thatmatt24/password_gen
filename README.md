@@ -27,3 +27,4 @@ python3 gen_pass.py {password length}
 4. "Acceptance" or "Rejection" for password
 5. ~~Save to clipboard (goal will be time-limiting save)~~
 6. Compliance with specified framework (i.e NIST)
+7. Argparsing: print to screen, save to file, capitalize a random letter or first letter, etc.
