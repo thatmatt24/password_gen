@@ -1,4 +1,4 @@
-from pandas.io.clipboard import clipboard_set
+# from pandas.io.clipboard import clipboard_set
 import random
 import json
 import time
@@ -16,32 +16,42 @@ def writer(passw, length):
         fieldnames = ['password', 'length']
         thewriter = csv.DictWriter(f, fieldnames=fieldnames)
 
-        thewriter.writerow({'password' : passw, 'length' : length})
+        thewriter.writerow({'password': passw, 'length': length})
+        
+def list_by_vals(total_dict, term):
+    key_list = []
+    items = total_dict.items()
+    for item in items:
+        if item[1] == term:
+            key_list.append(item[0])
+    return key_list
 
 
 def generate(total_len):
 
-    with open("sorted.json") as json_file:
-        data = json.load(json_file)
+    # with open("sorted.json") as json_file:
+    data = json.load(open("sorted.json"))
     
-    avg_choices = (total_len - 6) / 2
-
+    # avg_choices = (total_len - 6) / 2
+    first_rand_choice = ""
+    second_rand_choice = ""
     rand_bin = random.randint(0,1)
 
-    for i in range(29):
-        for k, v in data.items():
-            if (v == i):
-                total[i].append(k)
+    sort_time = time.perf_counter()
+
+    # TODO: unittest the following
+    first_len = random.randrange(3, total_len - 6)
+    second_len = total_len - 6 - first_len
     
-    if ((total_len % 2) == 1):
-        # print("avg: {}\tbin: {}\n1st: {}\t\t2nd: {}".format(avg_choices, rand_bin,
-        #                                                 math.ceil(avg_choices), math.floor(avg_choices)))
-        if (rand_bin == 0):
-            first_rand_choice = random.choice(total[math.ceil(avg_choices)])
-            second_rand_choice = random.choice(total[math.floor(avg_choices)])
-        else:
-            first_rand_choice = random.choice(total[math.floor(avg_choices)])
-            second_rand_choice = random.choice(total[math.ceil(avg_choices)])
+    find_time = time.perf_counter()
+    first_rand_choice = random.choice(list_by_vals(data, first_len))
+    second_rand_choice = random.choice(list_by_vals(data, second_len))
+    print(f"found in: {round(time.perf_counter()-find_time,2)}")
+
+    # print(f"total: {total_len}\tcorrect: {(len(first_rand_choice) + len(second_rand_choice) + 6) == total_len}")
+
+    # print(f"1st: {first_rand_choice}\t1st len: {len(first_rand_choice)}\tcheck: {len(first_rand_choice) == first_len}")
+    # print(f"2nd: {second_rand_choice}\t2nd len: {len(second_rand_choice)}\tcheck: {len(second_rand_choice) == second_len}")
 
     rand_num = random.choice(range(10000, 99999))
 
@@ -71,15 +81,15 @@ def main():
 
     writer(passw, len(passw))
     
-    clipboard_set(passw)
+    # clipboard_set(passw)
 
     print("\npassword: {}\t len: {}".format(passw, len(passw)))
     stop = time.perf_counter()
     print("\ndone in: {}".format(round(stop - start, 2)))
 
-    print("password saved to clipboard for next 20 seconds... \n")
-    time.sleep(20)
-    clipboard_set("")
+    # print("password saved to clipboard for next 20 seconds... \n")
+    # time.sleep(20)
+    # clipboard_set("")
 
     
 if __name__ == "__main__":
