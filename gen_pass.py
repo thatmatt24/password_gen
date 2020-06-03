@@ -5,10 +5,9 @@ import time
 import math
 import csv
 import sys
+import logging
 
-
-total = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-
+logging.basicConfig(filename='pass_gen.log',level=logging.DEBUG)
 
 def writer(passw, length):
 
@@ -29,10 +28,8 @@ def list_by_vals(total_dict, term):
 
 def generate(total_len):
 
-    # with open("sorted.json") as json_file:
     data = json.load(open("sorted.json"))
     
-    # avg_choices = (total_len - 6) / 2
     first_rand_choice = ""
     second_rand_choice = ""
     rand_bin = random.randint(0,1)
@@ -46,22 +43,15 @@ def generate(total_len):
     find_time = time.perf_counter()
     first_rand_choice = random.choice(list_by_vals(data, first_len))
     second_rand_choice = random.choice(list_by_vals(data, second_len))
-    # print(f"found in: {round(time.perf_counter()-find_time,2)}")
-
-    # print(f"total: {total_len}\tcorrect: {(len(first_rand_choice) + len(second_rand_choice) + 6) == total_len}")
-
-    # print(f"1st: {first_rand_choice}\t1st len: {len(first_rand_choice)}\tcheck: {len(first_rand_choice) == first_len}")
-    # print(f"2nd: {second_rand_choice}\t2nd len: {len(second_rand_choice)}\tcheck: {len(second_rand_choice) == second_len}")
 
     rand_num = random.choice(range(10000, 99999))
 
     specs = ['[', '@', '_', '!', '#', '$', '%', '^', '&', '*', '(',')', '<', '>', '?', '/', '\\', '|', '}', '{', '~', ':', ']', '+', '=', '.', ',', '`', ';','\'']
     rand_spec = random.choice(specs)
 
-    #combine
-    password = first_rand_choice + str(rand_num) + rand_spec + second_rand_choice
 
-    return password
+    return first_rand_choice + str(rand_num) + rand_spec + second_rand_choice
+
 
 
 def main():
@@ -88,8 +78,21 @@ def main():
     # print("\ndone in: {}".format(round(stop - start, 2)))
 
     print("password saved to clipboard for next 20 seconds... \n")
-    time.sleep(20)
+    print("|----5----|----10---|----15---|----20---|")
+    print("|", end="", flush=True)
+    for i in range(1,40):
+        if (i % 10 == 0):
+            time.sleep(0.5)
+            print("|", end="", flush=True)
+        else:
+            time.sleep(0.5)
+            print("-", end="", flush=True)
+    
+
     clipboard_set("")
+    print("|")
+
+    print()
 
     
 if __name__ == "__main__":
