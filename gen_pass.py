@@ -1,4 +1,4 @@
-# from pandas.io.clipboard import clipboard_set
+from pandas.io.clipboard import clipboard_set
 import random
 import json
 import time
@@ -46,7 +46,7 @@ def generate(total_len):
     find_time = time.perf_counter()
     first_rand_choice = random.choice(list_by_vals(data, first_len))
     second_rand_choice = random.choice(list_by_vals(data, second_len))
-    print(f"found in: {round(time.perf_counter()-find_time,2)}")
+    # print(f"found in: {round(time.perf_counter()-find_time,2)}")
 
     # print(f"total: {total_len}\tcorrect: {(len(first_rand_choice) + len(second_rand_choice) + 6) == total_len}")
 
@@ -79,17 +79,17 @@ def main():
 
     passw = generate(pass_len)
 
-    writer(passw, len(passw))
+    # writer(passw, len(passw))
     
-    # clipboard_set(passw)
+    clipboard_set(passw)
 
-    print("\npassword: {}\t len: {}".format(passw, len(passw)))
+    # print("\npassword: {}\t len: {}".format(passw, len(passw)))
     stop = time.perf_counter()
-    print("\ndone in: {}".format(round(stop - start, 2)))
+    # print("\ndone in: {}".format(round(stop - start, 2)))
 
-    # print("password saved to clipboard for next 20 seconds... \n")
-    # time.sleep(20)
-    # clipboard_set("")
+    print("password saved to clipboard for next 20 seconds... \n")
+    time.sleep(20)
+    clipboard_set("")
 
     
 if __name__ == "__main__":
