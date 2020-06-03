@@ -2,12 +2,17 @@ from pandas.io.clipboard import clipboard_set
 import random
 import json
 import time
-import math
 import csv
-import sys
-import logging
+import argparse
 
-logging.basicConfig(filename='pass_gen.log',level=logging.DEBUG)
+parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain'")
+parser.add_argument("-l", "--length", type=int, help="Specify length of password")
+parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
+parser.add_argument("-w", "--write", action="store_true", help="Write to file 'password.csv'")
+parser.add_argument("-a", "--all", action="store_true", help="All: Clipboard, Show, and Write are used")
+parser.add_argument("-nc", "--noclip", action="store_true", help="Do not copy password to clipboard")
+args = parser.parse_args()
+
 
 def writer(passw, length):
 
@@ -34,13 +39,10 @@ def generate(total_len):
     second_rand_choice = ""
     rand_bin = random.randint(0,1)
 
-    sort_time = time.perf_counter()
-
     # TODO: unittest the following
     first_len = random.randrange(3, total_len - 6)
     second_len = total_len - 6 - first_len
     
-    find_time = time.perf_counter()
     first_rand_choice = random.choice(list_by_vals(data, first_len))
     second_rand_choice = random.choice(list_by_vals(data, second_len))
 
@@ -56,43 +58,50 @@ def generate(total_len):
 
 def main():
 
-    if (len(sys.argv) <= 1):
-        pass_len = 15
-        print("default password length set: 15")
+    if (args.length):
+        pass_len = args.length
     else:
-        pass_len = int(sys.argv[1])
-    
+        pass_len = 15
+        print("password length set to default (15). Use -l LENGTH to specify.")
 
-    start = time.perf_counter()
     
     passw = ''
 
-    passw = generate(pass_len)
+    passw = generate(15)
 
-    # writer(passw, len(passw))
+    if args.all:
+        args.write = True
+        args.show = True
+        args.noclip = False
     
-    clipboard_set(passw)
+    if args.noclip:
+        args.show = True
 
-    # print("\npassword: {}\t len: {}".format(passw, len(passw)))
-    stop = time.perf_counter()
-    # print("\ndone in: {}".format(round(stop - start, 2)))
+    if args.write:
+        writer(passw, len(passw))
 
-    print("password saved to clipboard for next 20 seconds... \n")
-    print("|----5----|----10---|----15---|----20---|")
-    print("|", end="", flush=True)
-    for i in range(1,40):
-        if (i % 10 == 0):
-            time.sleep(0.5)
-            print("|", end="", flush=True)
-        else:
-            time.sleep(0.5)
-            print("-", end="", flush=True)
-    
+    if args.show:
+        print(f"password:\t{passw}\n")
+        args.noclip = True
 
-    clipboard_set("")
-    print("|")
+    if not args.noclip:
+        clipboard_set(passw)
 
-    print()
+        print("password saved to clipboard for next 20 seconds... \n")
+        print("|--------|15|------|10|------|5|--------|")
+        print("|", end="", flush=True)
+        for i in range(1,40):
+            if (i % 10 == 0):
+                time.sleep(0.5)
+                print("+", end="", flush=True)
+            else:
+                time.sleep(0.5)
+                print("-", end="", flush=True)
+        
+            clipboard_set("")
+        print("|")
+
+        print()
 
     
 if __name__ == "__main__":
