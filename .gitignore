@@ -1,3 +1,6 @@
 archive/
 __pycache__/
 ~$random.xlsx
+random.csv
+sorted.json
+runs.py
