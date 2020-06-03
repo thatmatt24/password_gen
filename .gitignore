@@ -4,3 +4,4 @@ __pycache__/
 random.csv
 sorted.json
 runs.py
+random.*
