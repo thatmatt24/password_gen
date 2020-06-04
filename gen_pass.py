@@ -5,12 +5,13 @@ import time
 import csv
 import argparse
 
-parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain'")
-parser.add_argument("-l", "--length", type=int, help="Specify length of password")
+parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain') Default action: copy to clipboard, no write to file or print to terminal.")
+group = parser.add_mutually_exclusive_group()
+parser.add_argument("-l", "--length", type=int, default=15, choices=range(12,33) ,help="Specify length of password")
 parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
 parser.add_argument("-w", "--write", action="store_true", help="Write to file 'password.csv'")
-parser.add_argument("-a", "--all", action="store_true", help="All: Clipboard, Show, and Write are used")
-parser.add_argument("-nc", "--noclip", action="store_true", help="Do not copy password to clipboard")
+group.add_argument("-a", "--all", action="store_true", help="All: Clipboard, Show, and Write are used")
+group.add_argument("-nc", "--noclip", action="store_true", help="Do not copy password to clipboard")
 args = parser.parse_args()
 
 
@@ -57,13 +58,6 @@ def generate(total_len):
 
 
 def main():
-
-    if (args.length):
-        pass_len = args.length
-    else:
-        pass_len = 15
-        print("password length set to default (15). Use -l LENGTH to specify.")
-
     
     passw = ''
 
