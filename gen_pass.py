@@ -61,13 +61,11 @@ def main():
     
     passw = ''
 
-    print(f"args: {args}")
-
     passw = generate(args.length)
 
     if args.all:
-        args.write = True
-        args.show = True
+        writer(passw, len(passw))
+        print(f"password:\t{passw}\n")
         args.noclip = False
     
     if args.noclip:
@@ -95,8 +93,8 @@ def main():
                 time.sleep(0.5)
                 print("-", end="", flush=True)
         
-            clipboard_set("")
         print("|")
+        clipboard_set("")
 
         print()
 
