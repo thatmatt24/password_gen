@@ -1,6 +1,7 @@
 archive/
 __pycache__/
-~$random.xlsx
+*.xlsx
 random.csv
 sorted.json
 runs.py
+*.log
