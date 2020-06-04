@@ -61,7 +61,9 @@ def main():
     
     passw = ''
 
-    passw = generate(15)
+    print(f"args: {args}")
+
+    passw = generate(args.length)
 
     if args.all:
         args.write = True
@@ -73,6 +75,7 @@ def main():
 
     if args.write:
         writer(passw, len(passw))
+        args.noclip = True
 
     if args.show:
         print(f"password:\t{passw}\n")
