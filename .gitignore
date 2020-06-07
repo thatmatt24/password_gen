@@ -5,3 +5,5 @@ random.csv
 sorted.json
 runs.py
 *.log
+test_gen.py
+settings.json
