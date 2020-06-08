@@ -1,7 +1,7 @@
 # Password Generator
 
 Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain')
-Default action: copy to clipboard, no write to file or print to terminal.
+<br>Default action: copy to clipboard, no write to file or print to terminal.
 
 ## How To Use
 
