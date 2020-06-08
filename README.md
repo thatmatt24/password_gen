@@ -9,9 +9,27 @@ Output is "word + digits(5) + special character + word"
 
 ## How To Use
 
-In terminal run:
 ```
-python3 gen_pass.py {password length}
+usage: gen_pass.py [-h]
+                   [-l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}]
+                   [-c {1,2}] [-s] [-f FILE] [-t TIME] [-v]
+
+Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain')
+Default action: copy to clipboard, no write to file or print to terminal.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}, --length {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
+                        Specify length of password
+  -c {1,2}, --caps {1,2}
+                        Capitalize first letter or either first word or second
+                        word, word; '-c 2' will be second word's first char
+  -s, --show            Print password to terminal
+  -f FILE, --file FILE  File to write to (default: 'password.csv') or
+                        specify.Caution: mainly used for testing, not a secure
+                        write or store
+  -t TIME, --time TIME  Set time to keep on clipboard (countdown)
+  -v, --verbose         Verbose output for analysis
 ```
 <dl>
   <dt>Note </dt>
