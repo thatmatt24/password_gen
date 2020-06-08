@@ -6,10 +6,15 @@ import json
 import time
 import csv
 import argparse
+import signal
+import sys
 
+def handler(x, frame):
+    clipboard_set("")
+    print()
+    sys.exit(0)
 
 def writer(passw, length):
-
     with open(args.file, 'a', newline='') as f:
         fieldnames = ['password', 'length']
         thewriter = csv.DictWriter(f, fieldnames=fieldnames)
@@ -26,7 +31,6 @@ def list_by_vals(total_dict, term):
 
 
 def generate(total_len):
-
     load_time = time.perf_counter()        
     data = json.load(open("sorted.json"))
 
@@ -66,73 +70,59 @@ def generate(total_len):
                                 '|', '}', '{', '~', ':', ']', '+', '=', '.', ',', '`', ';','\'']
     rand_spec = random.choice(specs)
 
-
     return first_rand_choice + str(rand_num) + rand_spec + second_rand_choice
 
 
 def main():
-    
-    passw = ''
 
+    passw = ''
     start = time.perf_counter()
 
-    passw = generate(args.length)
+    try:
+        passw = generate(args.length)
 
-    if args.verbose:
-        print(f"done in: {round(time.perf_counter() - start, 2)}")
+        if args.verbose:
+            print(f"done in: {round(time.perf_counter() - start, 2)}")
 
-    if args.write:
-        args.noclip = True
-        args.show = False
+        if args.show:
+            print(f"password:\t{passw}\n")
 
-    if args.all:
-        writer(passw, len(passw))
-        print(f"password:\t{passw}\n")
-        args.noclip = False
-
-    if args.noclip and not args.write:
-        args.show = True
-
-    if args.show:
-        print(f"password:\t{passw}\n")
-        args.noclip = True
-
-    if not args.noclip:
-        clipboard_set(passw)
-
-        print("password saved to clipboard for next 20 seconds... \n")
-        print("|--------|15|------|10|------|5|--------|")
-        print("|", end="", flush=True)
-        for i in range(1,40):
-            if (i % 10 == 0):
-                time.sleep(0.5)
-                print("+", end="", flush=True)
-            else:
-                time.sleep(0.5)
-                print("-", end="", flush=True)
+        if args.file:
+                writer(passw, len(passw))
         
-        print("|\n")
-        clipboard_set("")
+        if not args.show and not args.file:
+            clipboard_set(passw)
 
-    if args.write or args.file:
-            writer(passw, len(passw))
+            for i in range(args.time, 0, -1):
+                sys.stdout.write("\r{:2d} secs remaining".format(i))
+                sys.stdout.flush()
+                time.sleep(1)
 
-    
+            sys.stdout.write("\r   --- done ---  \n")
+            sys.stdout.flush()
+            clipboard_set("")
+
+    except:
+            print("\nerror in main\n")
+            signal.signal(signal.SIGTSTP, handler)
+        
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain') "
                                                     "Default action: copy to clipboard, no write to file or print to terminal.")
-    group = parser.add_mutually_exclusive_group()
     parser.add_argument("-l", "--length", type=int, default=15, choices=range(12, 33), help="Specify length of password")
     parser.add_argument("-c", "--caps", type=int, choices=(1, 2), help="Capitalize first letter or either first word or "
                                                                                             "second word, word; '-c 2' will be second word's first char")
     parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
-    parser.add_argument("-f", "--file", type=str, default="password.csv", help="File to write to (default: 'password.csv') or specify."
+    parser.add_argument("-f", "--file", type=str, help="File to write to (default: 'password.csv') or specify."
                                                                                 "Caution: mainly used for testing, not a secure write or store")
-    group.add_argument("-a", "--all", action="store_true", help="All: Clipboard, Show, Write, and Verbose are used")
-    group.add_argument("-nc", "--noclip", action="store_true", help="Do not copy password to clipboard")
+    parser.add_argument("-t", "--time", type=int, default=20, help="Set time to keep on clipboard (countdown)")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output for analysis")
-    group.add_argument("-w", "--write", action="store_true", help="Write to file only, no printing or clipboard")
+
     args = parser.parse_args()
+
+    signal.signal(signal.SIGTSTP, handler)
+
+    print(args)
 
     main()

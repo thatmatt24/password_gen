@@ -2,6 +2,7 @@ archive/
 __pycache__/
 *.xlsx
 random.csv
+password.csv
 sorted.json
 runs.py
 *.log
