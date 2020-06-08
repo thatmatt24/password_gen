@@ -1,21 +1,14 @@
 # Password Generator
-
-## Recreating the passward generator from "keychain"
-
-Output is "word + digits(5) + special character + word" 
-  ```
-  ex. foo55555!bar
-  ```
-
+`
+Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain')
+Default action: copy to clipboard, no write to file or print to terminal.
+`
 ## How To Use
 
 ```
 usage: gen_pass.py [-h]
                    [-l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}]
                    [-c {1,2}] [-s] [-f FILE] [-t TIME] [-v]
-
-Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain')
-Default action: copy to clipboard, no write to file or print to terminal.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -31,11 +24,6 @@ optional arguments:
   -t TIME, --time TIME  Set time to keep on clipboard (countdown)
   -v, --verbose         Verbose output for analysis
 ```
-<dl>
-  <dt>Note </dt>
-  <dd>If no argument {password length} provided, default set to 15</dd>
-  <dd>Password saved to clipboard for 20 seconds</dd>
-</dl>
 
 ## Future Modifications
 
