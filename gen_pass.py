@@ -11,7 +11,7 @@ import sys
 
 def handler(x, frame):
     clipboard_set("")
-    print()
+    print("\n")
     sys.exit(0)
 
 def writer(passw, length):
@@ -92,18 +92,18 @@ def main():
         
         if not args.show and not args.file:
             clipboard_set(passw)
-
+            print("Password Copied...\n")
             for i in range(args.time, 0, -1):
                 sys.stdout.write("\r{:2d} secs remaining".format(i))
                 sys.stdout.flush()
                 time.sleep(1)
 
-            sys.stdout.write("\r   --- done ---  \n")
+            sys.stdout.write("\r   --- done ---  \n\n")
             sys.stdout.flush()
             clipboard_set("")
 
-    except:
-            print("\nerror in main\n")
+    except Exception as e:
+            print(f"\nerror in main\n{e}")
             signal.signal(signal.SIGTSTP, handler)
         
 if __name__ == "__main__":
@@ -122,7 +122,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     signal.signal(signal.SIGTSTP, handler)
-
-    print(args)
 
     main()
