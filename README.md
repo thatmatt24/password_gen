@@ -28,10 +28,10 @@ optional arguments:
 ## Future Modifications
 
 1. ~~Argument parsing to replace the current "input"~~
-2. Hashing: storing and checking against to make sure password isn't used more than once
-3. ~~Clean up "word_list.json," not all words (i.e. "a" and "aa") need to be in list~~
-4. ~~Save to clipboard (goal will be time-limiting save)~~
-5. Compliance with specified framework (i.e NIST)
-6. ~Argparsing: print to screen, save to file, capitalization (first or second word)~
-7. Number of digits determined by overall length of password (i.e. 12 char password has between 3 and 5 digits)
-8. Allow for leading zeros in digits
+2. ~~Save to clipboard (time-limited)~~
+3. Compliance with specified framework (i.e NIST)
+4. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
+5. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
+6. Allow for leading zeros in digits
+7. More than 2 words, dependent on length (e.g. length = 25, 3 words totaling to max of 23 letters, then one number and one spec)
+9. ~Passphrases! (Defualt 4 words ~23-39 characters incl. spaces long)~

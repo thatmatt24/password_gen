@@ -8,6 +8,7 @@ import csv
 import argparse
 import signal
 import sys
+import math
 
 def handler(x, frame):
     clipboard_set("")
@@ -21,21 +22,42 @@ def writer(passw, length):
 
         thewriter.writerow({'password': passw, 'length': length})
         
-def list_by_vals(total_dict, term):
+def list_by_vals(ddata, term):
     key_list = []
-    items = total_dict.items()
+    items = ddata.items()
+
     for item in items:
         if item[1] == term:
             key_list.append(item[0])
     return random.choice(key_list)
 
+def random_with_N_digits(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return random.randint(range_start, range_end)
 
-def generate(total_len):
+def phrase(ddata):
+    # TODO: options?
+
+    return list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10)) + " " \
+                    + list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10))
+
+def generate(ddata, total_len):
     load_time = time.perf_counter()        
-    data = json.load(open("sorted.json"))
-
     if args.verbose:
         print(f"load time: {round(time.perf_counter() - load_time, 2)}")
+
+    dig_length_range = []
+    dig_length_min_option = 1
+    dig_length_max_option = 4
+    dig_length_range.append(dig_length_min_option)
+    if total_len >= 18:
+        dig_length_range.append(dig_length_max_option)
+    dig_length_range.append(round(total_len * .25) - 2)
+    dig_length_range.append(round(total_len * .25) - 1)
+    digit_length = random.choice(dig_length_range)
+
+    rand_digits = random_with_N_digits(digit_length)
 
     first_rand_choice = ""
     second_rand_choice = ""
@@ -48,11 +70,11 @@ def generate(total_len):
         first_len = random.randrange(random.randint(1,2), total_len - rand_true_range)
     else:
         first_len = random.randrange(random.randint(2,3), total_len - rand_false_range)
-    second_len = total_len - 6 - first_len
+    second_len = total_len - digit_length - 1 - first_len
     
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        first_rand_choice = executor.submit(list_by_vals, data, first_len)
-        second_rand_choice = executor.submit(list_by_vals, data, second_len)
+        first_rand_choice = executor.submit(list_by_vals, ddata,  first_len)
+        second_rand_choice = executor.submit(list_by_vals, ddata, second_len)
 
     first_rand_choice = first_rand_choice.result()
 
@@ -64,13 +86,11 @@ def generate(total_len):
     if args.caps == 2:
         second_rand_choice = second_rand_choice[0].upper() + second_rand_choice[1:]
 
-    rand_num = random.choice(range(10000, 99999))
-
     specs = ['[', '@', '_', '!', '#', '$', '%', '^', '&', '*', '(', ')', '<', '>', '?', '/', '\\',
                                 '|', '}', '{', '~', ':', ']', '+', '=', '.', ',', '`', ';','\'']
     rand_spec = random.choice(specs)
 
-    return first_rand_choice + str(rand_num) + rand_spec + second_rand_choice
+    return first_rand_choice + str(rand_digits) + rand_spec + second_rand_choice
 
 
 def main():
@@ -79,7 +99,12 @@ def main():
     start = time.perf_counter()
 
     try:
-        passw = generate(args.length)
+        data = json.load(open("sorted.json"))
+
+        if args.passphrase:
+            passw = phrase(data)
+        else:
+            passw = generate(data, args.length)
 
         if args.verbose:
             print(f"done in: {round(time.perf_counter() - start, 2)}")
@@ -92,7 +117,7 @@ def main():
         
         if not args.show and not args.file:
             clipboard_set(passw)
-            print("Password Copied...\n")
+            print("password copied...\n")
             for i in range(args.time, 0, -1):
                 sys.stdout.write("\r{:2d} secs remaining".format(i))
                 sys.stdout.flush()
@@ -113,6 +138,7 @@ if __name__ == "__main__":
     parser.add_argument("-l", "--length", type=int, default=15, choices=range(12, 33), help="Specify length of password")
     parser.add_argument("-c", "--caps", type=int, choices=(1, 2), help="Capitalize first letter or either first word or "
                                                                                             "second word, word; '-c 2' will be second word's first char")
+    parser.add_argument("-p", "--passphrase", action="store_true", help="Create a passphrase (words only)")
     parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
     parser.add_argument("-f", "--file", type=str, help="File to write to (default: 'password.csv') or specify."
                                                                                 "Caution: mainly used for testing, not a secure write or store")
