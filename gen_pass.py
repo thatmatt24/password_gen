@@ -1,6 +1,5 @@
 from pandas.io.clipboard import clipboard_set
 from io import StringIO
-import concurrent.futures
 import random
 import json
 import time
@@ -8,11 +7,11 @@ import csv
 import argparse
 import signal
 import sys
-import math
+
 
 def handler(x, frame):
     clipboard_set("")
-    print("\n")
+    print()
     sys.exit(0)
 
 def writer(passw, length):
@@ -31,57 +30,48 @@ def list_by_vals(ddata, term):
             key_list.append(item[0])
     return random.choice(key_list)
 
-def random_with_N_digits(n):
-    range_start = 10**(n-1)
-    range_end = (10**n)-1
-    return random.randint(range_start, range_end)
-
 def phrase(ddata):
     # TODO: options?
-
     return list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10)) + " " \
                     + list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10))
 
-def generate(ddata, total_len):
-    load_time = time.perf_counter()        
-    if args.verbose:
-        print(f"load time: {round(time.perf_counter() - load_time, 2)}")
+def gen_digits(num):
+    digits = ""
+    for _ in range(num):
+        digits += str(random.randint(0, 10))
+    return digits
 
+def generate(ddata, total_len):
     dig_length_range = []
     dig_length_min_option = 1
     dig_length_max_option = 4
+
     dig_length_range.append(dig_length_min_option)
     if total_len >= 18:
         dig_length_range.append(dig_length_max_option)
     dig_length_range.append(round(total_len * .25) - 2)
     dig_length_range.append(round(total_len * .25) - 1)
-    digit_length = random.choice(dig_length_range)
 
-    rand_digits = random_with_N_digits(digit_length)
-
+    rand_digits = gen_digits(random.choice(dig_length_range))
     first_rand_choice = ""
     second_rand_choice = ""
-    rand_bool = bool(random.getrandbits(1))
 
-    rand_true_range = random.randrange(6, total_len - 2)
-    rand_false_range = random.randrange(7, total_len - 3)
-
-    if rand_bool:
-        first_len = random.randrange(random.randint(1,2), total_len - rand_true_range)
+    if bool(random.getrandbits(1)):
+        first_len = random.randrange(random.randint(1,2), total_len - random.randrange(6, total_len - 2))
     else:
-        first_len = random.randrange(random.randint(2,3), total_len - rand_false_range)
-    second_len = total_len - digit_length - 1 - first_len
+        first_len = random.randrange(random.randint(2,3), total_len - random.randrange(7, total_len - 3))
+    second_len = total_len - len(rand_digits) - 1 - first_len
     
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        first_rand_choice = executor.submit(list_by_vals, ddata,  first_len)
-        second_rand_choice = executor.submit(list_by_vals, ddata, second_len)
+    if args.verbose:
+        print(args)
+        print(f"fir len: {first_len}\tsec len: {second_len}")
+        print(f"dig len: {len(rand_digits)}\tpas len: {total_len}")
 
-    first_rand_choice = first_rand_choice.result()
+    first_rand_choice = list_by_vals(ddata,  first_len)
+    second_rand_choice = list_by_vals(ddata, second_len)
 
     if args.caps == 1:
         first_rand_choice = first_rand_choice[0].upper() + first_rand_choice[1:]
-
-    second_rand_choice = second_rand_choice.result()
 
     if args.caps == 2:
         second_rand_choice = second_rand_choice[0].upper() + second_rand_choice[1:]
@@ -94,27 +84,29 @@ def generate(ddata, total_len):
 
 
 def main():
-
     passw = ''
     start = time.perf_counter()
 
     try:
+        load_time = time.perf_counter()
         data = json.load(open("sorted.json"))
+        if args.verbose:
+            print(f"load time: {round(time.perf_counter() - load_time, 2)}")
 
         if args.passphrase:
             passw = phrase(data)
         else:
             passw = generate(data, args.length)
 
-        if args.verbose:
-            print(f"done in: {round(time.perf_counter() - start, 2)}")
-
         if args.show:
             print(f"password:\t{passw}\n")
 
         if args.file:
                 writer(passw, len(passw))
-        
+
+        if args.verbose:
+            print(f"done in: {round(time.perf_counter() - start, 2)}")
+
         if not args.show and not args.file:
             clipboard_set(passw)
             print("password copied...\n")
@@ -126,15 +118,15 @@ def main():
             sys.stdout.write("\r   --- done ---  \n\n")
             sys.stdout.flush()
             clipboard_set("")
-
+        
     except Exception as e:
             print(f"\nerror in main\n{e}")
             signal.signal(signal.SIGTSTP, handler)
         
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain') "
-                                                    "Default action: copy to clipboard, no write to file or print to terminal.")
+    parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain'). "
+                                                    "Default action: copy to clipboard, no write to file or print to terminal. Passphrases optional as well (5 random words, no digits).")
     parser.add_argument("-l", "--length", type=int, default=15, choices=range(12, 33), help="Specify length of password")
     parser.add_argument("-c", "--caps", type=int, choices=(1, 2), help="Capitalize first letter or either first word or "
                                                                                             "second word, word; '-c 2' will be second word's first char")

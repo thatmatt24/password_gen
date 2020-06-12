@@ -33,5 +33,4 @@ optional arguments:
 4. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
 5. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
 6. Allow for leading zeros in digits
-7. More than 2 words, dependent on length (e.g. length = 25, 3 words totaling to max of 23 letters, then one number and one spec)
-9. ~Passphrases! (Defualt 4 words ~23-39 characters incl. spaces long)~
+7. ~Passphrases! (Defualt 4 words ~23-39 characters incl. spaces long)~
