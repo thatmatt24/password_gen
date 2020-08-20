@@ -1,6 +1,7 @@
 # Password Generator
 
-Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain')
+Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain') by default
+with option for Passphrases by using '-p'
 <br>Default action: copy to clipboard, no write to file or print to terminal.
 
 ## How To Use
@@ -33,4 +34,4 @@ optional arguments:
 4. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
 5. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
 6. Allow for leading zeros in digits
-7. ~Passphrases! (Defualt 4 words ~23-39 characters incl. spaces long)~
+7. ~Passphrases! (Defualt 4 words \~23-39 characters incl. spaces long)~
