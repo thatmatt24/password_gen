@@ -1,5 +1,5 @@
+from random import randint, randrange
 from pandas.io.clipboard import clipboard_set
-from io import StringIO
 import random
 import json
 import time
@@ -23,17 +23,19 @@ def writer(passw, length):
         
 def list_by_vals(ddata, term):
     key_list = []
-    items = ddata.items()
 
-    for item in items:
+    for item in ddata.items():
         if item[1] == term:
             key_list.append(item[0])
     return random.choice(key_list)
 
-def phrase(ddata):
-    # TODO: options?
-    return list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10)) + " " \
-                    + list_by_vals(ddata, random.randrange(5,10)) + " " + list_by_vals(ddata, random.randrange(5,10))
+
+def phrase(ddata, num_words):
+    words = []
+    for _ in range(num_words):
+        words.append(list_by_vals(ddata,random.randrange(5,10)))
+
+    return " ".join(words)
 
 def gen_digits(num):
     digits = ""
@@ -89,17 +91,18 @@ def main():
 
     try:
         load_time = time.perf_counter()
-        data = json.load(open("sorted.json"))
+        data = json.load(open("/Users/mattmcmahon/Desktop/Matt/Matt/pass_gen/archive/sorted.json"))
         if args.verbose:
             print(f"load time: {round(time.perf_counter() - load_time, 2)}")
 
         if args.passphrase:
-            passw = phrase(data)
+            passw = phrase(data, args.passphrase)
         else:
             passw = generate(data, args.length)
 
         if args.show:
             print(f"password:\t{passw}\n")
+            print(len(passw))
 
         if args.file:
                 writer(passw, len(passw))
@@ -111,11 +114,11 @@ def main():
             clipboard_set(passw)
             print("password copied...\n")
             for i in range(args.time, 0, -1):
-                sys.stdout.write("\r{:2d} secs remaining".format(i))
+                sys.stdout.write("\r\t{:2d} secs remaining".format(i))
                 sys.stdout.flush()
                 time.sleep(1)
 
-            sys.stdout.write("\r   --- done ---  \n\n")
+            sys.stdout.write("\r   --- done ---             \n\n")
             sys.stdout.flush()
             clipboard_set("")
         
@@ -129,8 +132,8 @@ if __name__ == "__main__":
                                                     "Default action: copy to clipboard, no write to file or print to terminal. Passphrases optional as well (5 random words, no digits).")
     parser.add_argument("-l", "--length", type=int, default=15, choices=range(12, 33), help="Specify length of password")
     parser.add_argument("-c", "--caps", type=int, choices=(1, 2), help="Capitalize first letter or either first word or "
-                                                                                            "second word, word; '-c 2' will be second word's first char")
-    parser.add_argument("-p", "--passphrase", action="store_true", help="Create a passphrase (words only)")
+                                                                                "second word, word; '-c 2' will be second word's first char")
+    parser.add_argument("-p", "--passphrase", type=int, help="Create a passphrase with given number of words ")
     parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
     parser.add_argument("-f", "--file", type=str, help="File to write to (default: 'password.csv') or specify."
                                                                                 "Caution: mainly used for testing, not a secure write or store")
