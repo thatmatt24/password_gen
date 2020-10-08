@@ -9,7 +9,11 @@ with option for Passphrases by using '-p'
 ```
 usage: gen_pass.py [-h]
                    [-l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}]
-                   [-c {1,2}] [-s] [-f FILE] [-t TIME] [-v]
+                   [-c {1,2}] [-p PASSPHRASE] [-s] [-f FILE] [-t TIME] [-v]
+
+Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain').
+Default action: copy to clipboard, no write to file or print to terminal.
+Passphrases optional as well (5 random words, no digits).
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -18,6 +22,8 @@ optional arguments:
   -c {1,2}, --caps {1,2}
                         Capitalize first letter or either first word or second
                         word, word; '-c 2' will be second word's first char
+  -p PASSPHRASE, --passphrase PASSPHRASE
+                        Create a passphrase with given number of words
   -s, --show            Print password to terminal
   -f FILE, --file FILE  File to write to (default: 'password.csv') or
                         specify.Caution: mainly used for testing, not a secure
@@ -33,5 +39,5 @@ optional arguments:
 3. Compliance with specified framework (i.e NIST)
 4. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
 5. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
-6. Allow for leading zeros in digits
+6. ~~Allow for leading zeros in digits~~
 7. ~Passphrases! (Default 4 words \~23-39 characters incl. spaces long)~
