@@ -91,7 +91,7 @@ def main():
 
     try:
         load_time = time.perf_counter()
-        data = json.load(open("/Users/mattmcmahon/Desktop/Matt/Matt/pass_gen/archive/sorted.json"))
+        data = json.load(open("/Users/mattmcmahon/Desktop/repos/password_gen/sorted.json"))
         if args.verbose:
             print(f"load time: {round(time.perf_counter() - load_time, 2)}")
 
