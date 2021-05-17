@@ -36,8 +36,7 @@ optional arguments:
 
 1. ~~Argument parsing to replace the current "input"~~
 2. ~~Save to clipboard (time-limited)~~
-3. Compliance with specified framework (i.e NIST)
-4. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
-5. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
-6. ~~Allow for leading zeros in digits~~
-7. ~Passphrases! (Default 4 words \~23-39 characters incl. spaces long)~
+3. ~Argparsing: print to screen, save to file, capitalization (first or second word), time on clipboard~
+4. ~Number of digits determined by overall length of password (i.e. 12 char password has between 1 and 3 digits)~
+5. ~~Allow for leading zeros in digits~~
+6. ~Passphrases! (Default 4 words \~23-39 characters incl. spaces long)~
