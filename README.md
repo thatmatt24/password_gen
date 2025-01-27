@@ -7,27 +7,24 @@ with option for Passphrases by using '-p'
 ## How To Use
 
 ```
-usage: gen_pass.py [-h]
-                   [-l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}]
-                   [-c {1,2}] [-p PASSPHRASE] [-s] [-f FILE] [-t TIME] [-v]
+usage: gen_pass.py [-h] 
+                   [-l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}] 
+                   [-c {1,2}] [-p PASSPHRASE] [-s] [-w SOURCE_WORDS] [-f FILE] [-t TIME] [-v]
 
-Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain').
-Default action: copy to clipboard, no write to file or print to terminal.
-Passphrases optional as well (5 random words, no digits).
+Generates "foo55555!bar" passwords (replaces deprecated option in 'keychain').Default action: copy to clipboard, no write to file or print to terminal. Passphrases optional as well (5 random words, no digits).
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -l {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}, --length {12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32}
                         Specify length of password
   -c {1,2}, --caps {1,2}
-                        Capitalize first letter or either first word or second
-                        word, word; '-c 2' will be second word's first char
+                        Capitalize first letter or either first word or second word, word; '-c 2' will be second word's first char
   -p PASSPHRASE, --passphrase PASSPHRASE
                         Create a passphrase with given number of words
   -s, --show            Print password to terminal
-  -f FILE, --file FILE  File to write to (default: 'password.csv') or
-                        specify.Caution: mainly used for testing, not a secure
-                        write or store
+  -w SOURCE_WORDS, --source_words SOURCE_WORDS
+                        Source file for words list
+  -f FILE, --file FILE  File to write to (default: 'password.csv') or specify.Caution: mainly used for testing, not a secure write or store
   -t TIME, --time TIME  Set time to keep on clipboard (countdown)
   -v, --verbose         Verbose output for analysis
 ```
