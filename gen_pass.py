@@ -91,7 +91,17 @@ def main():
 
     try:
         load_time = time.perf_counter()
-        data = json.load(open("/Users/mattmcmahon/Desktop/repos/password_gen/sorted.json"))
+
+        try:
+            data = json.load(open(args.source_words))
+        except json.decoder.JSONDecodeError:
+            json_data = {}
+            with open(args.source_words, "r") as csvf:
+                reader = csv.reader(csvf)
+                for rows in reader:
+                    json_data[rows[0]] = len(rows[0])
+            data = json_data
+
         if args.verbose:
             print(f"load time: {round(time.perf_counter() - load_time, 2)}")
 
@@ -123,18 +133,19 @@ def main():
             clipboard_set("")
         
     except Exception as e:
-            print(f"\nerror in main\n{e}")
-            signal.signal(signal.SIGTSTP, handler)
+        print(f"\nerror in main\n{e}")
+        signal.signal(signal.SIGTSTP, handler)
         
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain'). "
+    parser = argparse.ArgumentParser(description="Generates \"foo55555!bar\" passwords (replaces deprecated option in 'keychain')."
                                                     "Default action: copy to clipboard, no write to file or print to terminal. Passphrases optional as well (5 random words, no digits).")
-    parser.add_argument("-l", "--length", type=int, default=15, choices=range(12, 33), help="Specify length of password")
+    parser.add_argument("-l", "--length", type=int, default=18, choices=range(12, 33), help="Specify length of password")
     parser.add_argument("-c", "--caps", type=int, choices=(1, 2), help="Capitalize first letter or either first word or "
                                                                                 "second word, word; '-c 2' will be second word's first char")
     parser.add_argument("-p", "--passphrase", type=int, help="Create a passphrase with given number of words ")
     parser.add_argument("-s", "--show", action="store_true", help="Print password to terminal")
+    parser.add_argument("-w", "--source_words", default="/Users/mattmcmahon/Desktop/repos/password_gen/sorted.json", help="Source file for words list")
     parser.add_argument("-f", "--file", type=str, help="File to write to (default: 'password.csv') or specify."
                                                                                 "Caution: mainly used for testing, not a secure write or store")
     parser.add_argument("-t", "--time", type=int, default=20, help="Set time to keep on clipboard (countdown)")
